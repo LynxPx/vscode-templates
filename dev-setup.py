@@ -58,6 +58,43 @@ ask_git_init() {
     esac
 }
 
+# Function to remove the .git directory to avoid conflicts
+remove_git_dir() {
+    if [ -d ".git" ]; then
+        read -p "A .git directory exists which may conflict with your project. Remove it? (y/n) " answer
+        case ${answer:0:1} in
+            y|Y )
+                echo "Removing .git directory..."
+                rm -rf .git
+            ;;
+            * )
+                echo "Keeping .git directory."
+            ;;
+        esac
+    fi
+}
+
+# Move content from setup back ../ hopefully you cloned into existing repo
+copy_contents_to_parent() {
+    read -p "Do you want to copy the setup script's contents to the parent directory? (y/n) " answer
+    case ${answer:0:1} in
+        y|Y )
+            echo "Copying contents to the parent directory..."
+            # Copy all contents except the script itself and .git directory
+            find . -maxdepth 1 ! -name . ! -name .git ! -name $(basename -- "$0") -exec cp -r {} ../ \;
+            # Ensure .vscode settings are copied correctly
+            if [ -d ".vscode" ]; then
+                mkdir -p ../.vscode
+                cp -r .vscode/* ../.vscode/
+            fi
+            # Change directory to the parent
+            cd ..
+        ;;
+        * )
+            echo "Proceeding without copying."
+        ;;
+    esac
+}
 # Call the function to select Python version
 select_python_version
 
