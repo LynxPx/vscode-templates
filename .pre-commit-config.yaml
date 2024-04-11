@@ -1,0 +1,18 @@
+repos:
+# -   repo: local
+#     hooks:
+#     -   id: ticket-number-check
+#         name: Check for ticket number in commit message
+#         entry: /usr/bin/env bash -c 'grep -qE "^(PROJECT-123|TICKET-\d+):" $1'
+#         language: system
+#         types: [commit-msg]
+        
+-   repo: https://github.com/PyCQA/isort
+    rev: 5.13.2
+    hooks:
+    -   id: isort
+
+-   repo: https://github.com/psf/black
+    rev: 24.3.0
+    hooks:
+    -   id: black
